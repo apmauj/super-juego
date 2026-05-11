@@ -56,20 +56,21 @@ export const COLLECTIBLE_ITEMS: CollectibleItem[] = [
 ];
 
 // ==================== BOARD ====================
-export const BOARD_SIZE = 50;
-export const SQUARES_PER_ROW = 8;
+export const BOARD_SIZE = 100;
+export const SQUARES_PER_ROW = 10;
+export const TOTAL_ROWS = 10;
 
 export const generateBoard = (): BoardSquare[] => {
   const board: BoardSquare[] = [];
 
-  // Generate random bonus positions for each decade
+  // Generate random bonus positions for each decade (1-10, 11-20, ..., 91-100)
   const bonusPositions = new Set<number>();
-  for (let decade = 0; decade < 5; decade++) {
+  for (let decade = 0; decade < 10; decade++) {
     const start = decade * 10 + 1;
     const end = Math.min(decade * 10 + 10, BOARD_SIZE - 1);
     const candidates: number[] = [];
     for (let i = start; i <= end; i++) {
-      if (i % 5 !== 0 && i !== BOARD_SIZE) {
+      if (i % 5 !== 0 && i !== BOARD_SIZE && i !== 1) {
         candidates.push(i);
       }
     }
@@ -161,11 +162,12 @@ export const getRandomMessage = (messages: string[]): string => {
 };
 
 // ==================== BOARD LAYOUT HELPERS ====================
+// Square 1 is at top-left, serpentine path going down
 export const getSquarePosition = (squareNumber: number): { row: number; col: number } => {
   const index = squareNumber - 1;
   const row = Math.floor(index / SQUARES_PER_ROW);
   const colInRow = index % SQUARES_PER_ROW;
-  // Alternate direction for serpentine
+  // Alternate direction for serpentine (even rows: left-to-right, odd rows: right-to-left)
   const col = row % 2 === 0 ? colInRow : SQUARES_PER_ROW - 1 - colInRow;
   return { row, col };
 };
