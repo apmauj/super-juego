@@ -292,12 +292,18 @@
   font-weight: 500;
 }
 
-.welcome-heroes {
+.welcome-heroes-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 1.5rem 0;
+}
+
+.welcome-heroes-row {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
-  margin: 1.5rem 0;
-  flex-wrap: wrap;
 }
 
 .welcome-hero-float {

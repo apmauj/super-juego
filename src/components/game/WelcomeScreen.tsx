@@ -73,37 +73,41 @@ export function WelcomeScreen() {
           <p className="welcome-subtitle">¡AVANZA POR EL TABLERO RESOLVIENDO SUMAS!</p>
         </div>
 
-        {/* Mini heroes display */}
-        <div className="welcome-heroes">
-          <div className="welcome-hero-float" style={{ animationDelay: '0s' }}>
-            <HeroCharacter heroId="CAPITANA_ESTRELLA" size={70} animated />
+        {/* Mini heroes display - 2 rows of 4 */}
+        <div className="welcome-heroes-grid">
+          <div className="welcome-heroes-row">
+            <div className="welcome-hero-float" style={{ animationDelay: '0s' }}>
+              <HeroCharacter heroId="CAPITANA_ESTRELLA" size={70} animated />
+            </div>
+            <div className="welcome-hero-float" style={{ animationDelay: '0.3s' }}>
+              <HeroCharacter heroId="RAYO_VELOZ" size={70} animated />
+            </div>
+            <div className="welcome-hero-float" style={{ animationDelay: '0.6s' }}>
+              <HeroCharacter heroId="MEGA_BOT" size={70} animated />
+            </div>
+            <div className="welcome-hero-float" style={{ animationDelay: '0.9s' }}>
+              <HeroCharacter heroId="ECO_VERDE" size={70} animated />
+            </div>
           </div>
-          <div className="welcome-hero-float" style={{ animationDelay: '0.3s' }}>
-            <HeroCharacter heroId="RAYO_VELOZ" size={70} animated />
-          </div>
-          <div className="welcome-hero-float" style={{ animationDelay: '0.6s' }}>
-            <HeroCharacter heroId="MEGA_BOT" size={70} animated />
-          </div>
-          <div className="welcome-hero-float" style={{ animationDelay: '0.9s' }}>
-            <HeroCharacter heroId="ECO_VERDE" size={70} animated />
-          </div>
-          <div className="welcome-hero-float" style={{ animationDelay: '1.2s' }}>
-            <HeroCharacter heroId="FLAMA_IGNEA" size={70} animated />
-          </div>
-          <div className="welcome-hero-float" style={{ animationDelay: '1.5s' }}>
-            <HeroCharacter heroId="CRISTAL_POLAR" size={70} animated />
-          </div>
-          <div className="welcome-hero-float" style={{ animationDelay: '1.8s' }}>
-            <HeroCharacter heroId="VELOCIBOT" size={70} animated />
-          </div>
-          <div className="welcome-hero-float" style={{ animationDelay: '2.1s' }}>
-            <HeroCharacter heroId="AQUA_TORRENTE" size={70} animated />
+          <div className="welcome-heroes-row">
+            <div className="welcome-hero-float" style={{ animationDelay: '1.2s' }}>
+              <HeroCharacter heroId="FLAMA_IGNEA" size={70} animated />
+            </div>
+            <div className="welcome-hero-float" style={{ animationDelay: '1.5s' }}>
+              <HeroCharacter heroId="CRISTAL_POLAR" size={70} animated />
+            </div>
+            <div className="welcome-hero-float" style={{ animationDelay: '1.8s' }}>
+              <HeroCharacter heroId="VELOCIBOT" size={70} animated />
+            </div>
+            <div className="welcome-hero-float" style={{ animationDelay: '2.1s' }}>
+              <HeroCharacter heroId="AQUA_TORRENTE" size={70} animated />
+            </div>
           </div>
         </div>
 
         {/* Player count selector */}
         <div className="welcome-section">
-          <h2 className="welcome-label">¿CUÁNTOS JUGADORES?</h2>
+          <h2 className="welcome-label">¿CUÁNTOS JUGADORES Y JUGADORAS?</h2>
           <div className="player-count-buttons">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((count) => (
               <button
