@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   // "export" generates static HTML/CSS/JS — compatible with GitHub Pages
   // No backend/server required — the entire game runs client-side
   output: "export",
+  basePath: "/super-juego",
+  assetPrefix: "/super-juego",
   typescript: {
     ignoreBuildErrors: true,
   },
