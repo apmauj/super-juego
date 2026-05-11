@@ -66,7 +66,9 @@ interface GameState {
 
   // Actions
   setPlayerCount: (count: number) => void;
+  setPhase: (phase: GamePhase) => void;
   addPlayer: (name: string, heroId: HeroId) => void;
+  removeLastPlayer: () => void;
   startGame: () => void;
   rollDice: () => void;
   submitAnswer: (answer: number) => void;
@@ -103,6 +105,10 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({ playerCount: count });
   },
 
+  setPhase: (phase: GamePhase) => {
+    set((state) => ({ phase, previousPhase: state.phase }));
+  },
+
   addPlayer: (name: string, heroId: HeroId) => {
     const { players } = get();
     const hero = getHeroById(heroId);
@@ -120,6 +126,11 @@ export const useGameStore = create<GameState>((set, get) => ({
       finishOrder: 0,
     };
     set({ players: [...players, newPlayer] });
+  },
+
+  removeLastPlayer: () => {
+    const { players } = get();
+    set({ players: players.slice(0, -1) });
   },
 
   startGame: () => {
