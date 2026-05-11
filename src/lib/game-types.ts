@@ -1,6 +1,14 @@
 // Game Types for Superhero Educational Board Game
 
-export type HeroId = 'CAPITANA_ESTRELLA' | 'RAYO_VELOZ' | 'MEGA_BOT' | 'ECO_VERDE';
+export type HeroId =
+  | 'CAPITANA_ESTRELLA'
+  | 'RAYO_VELOZ'
+  | 'MEGA_BOT'
+  | 'ECO_VERDE'
+  | 'FLAMA_IGNEA'
+  | 'CRISTAL_POLAR'
+  | 'VELOCIBOT'
+  | 'AQUA_TORRENTE';
 
 export type GamePhase =
   | 'SETUP'

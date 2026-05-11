@@ -98,7 +98,7 @@ export function CharacterSelectScreen() {
                       disabled={isUsed}
                     >
                       <div className="hero-card-avatar">
-                        <HeroCharacter heroId={hero.id} size={120} animated={!isUsed} />
+                        <HeroCharacter heroId={hero.id} size={100} animated={!isUsed} />
                       </div>
                       <p className="hero-card-name" style={{ color: isUsed ? '#999' : hero.borderColor }}>
                         {hero.name}

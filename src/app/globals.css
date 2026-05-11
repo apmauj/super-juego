@@ -270,7 +270,7 @@
 .title-word {
   display: inline-block;
   animation: fade-in-up 0.5s ease-out both;
-  background: linear-gradient(135deg, #FF69B4, #FF6B35, #FFD700, #4CAF50, #4A90D9);
+  background: linear-gradient(135deg, #FF69B4, #FF5722, #FFD700, #4CAF50, #00BCD4, #4A90D9, #9C27B0, #0277BD);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -318,13 +318,14 @@
 .player-count-buttons {
   display: flex;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .player-count-btn {
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
   border: 3px solid #ddd;
   background: white;
   cursor: pointer;
@@ -512,20 +513,27 @@
 .hero-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 480px) {
   .hero-grid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
+@media (min-width: 768px) {
+  .hero-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+}
+
 .hero-card {
-  border-radius: 20px;
-  border: 4px solid;
-  padding: 1rem 0.5rem;
+  border-radius: 16px;
+  border: 3px solid;
+  padding: 0.5rem 0.25rem;
   cursor: pointer;
   transition: all 0.3s ease;
   background: white;
@@ -550,9 +558,10 @@
 }
 
 .hero-card-name {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 700;
   margin: 0;
+  line-height: 1.2;
 }
 
 .hero-card-emoji {
@@ -1434,7 +1443,7 @@
 .end-rankings {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
 }
 

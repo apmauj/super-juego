@@ -20,7 +20,7 @@ export function EndScreen() {
     return b.score - a.score;
   });
 
-  const medals = ['🥇', '🥈', '🥉', '4️⃣'];
+  const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣'];
 
   return (
     <div className="end-screen">

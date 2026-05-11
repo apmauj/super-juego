@@ -40,6 +40,42 @@ export const HEROES: Hero[] = [
     lightColor: '#A5D6A7',
     emoji: '🌿',
   },
+  {
+    id: 'FLAMA_IGNEA',
+    name: 'FLAMA ÍGNEA',
+    color: '#FF5722',
+    bgColor: '#FBE9E7',
+    borderColor: '#D84315',
+    lightColor: '#FF8A65',
+    emoji: '🔥',
+  },
+  {
+    id: 'CRISTAL_POLAR',
+    name: 'CRISTAL POLAR',
+    color: '#00BCD4',
+    bgColor: '#E0F7FA',
+    borderColor: '#00838F',
+    lightColor: '#80DEEA',
+    emoji: '❄️',
+  },
+  {
+    id: 'VELOCIBOT',
+    name: 'VELOCIBOT',
+    color: '#9C27B0',
+    bgColor: '#F3E5F5',
+    borderColor: '#6A1B9A',
+    lightColor: '#CE93D8',
+    emoji: '⚙️',
+  },
+  {
+    id: 'AQUA_TORRENTE',
+    name: 'AQUA TORRENTE',
+    color: '#0277BD',
+    bgColor: '#E1F5FE',
+    borderColor: '#01579B',
+    lightColor: '#4FC3F7',
+    emoji: '🌊',
+  },
 ];
 
 export const getHeroById = (id: HeroId): Hero => {
