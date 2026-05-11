@@ -169,23 +169,14 @@ export const useGameStore = create<GameState>((set, get) => ({
         const player = players[currentPlayerIndex];
         const currentPosition = player.position;
 
-        // Cap position at board size for the question
-        const maxAnswer = Math.min(currentPosition + finalValue, BOARD_SIZE);
-
-        const options = generateMathOptions(currentPosition, finalValue);
-        // Ensure the correct answer doesn't exceed board size
         const correctAnswer = currentPosition + finalValue;
-        const cappedCorrect = Math.min(correctAnswer, BOARD_SIZE);
-        const finalOptions = options.map((o) => Math.min(o, BOARD_SIZE));
-        if (!finalOptions.includes(cappedCorrect)) {
-          finalOptions[0] = cappedCorrect;
-        }
+        const options = generateMathOptions(currentPosition, finalValue);
 
         const question: MathQuestion = {
           position: currentPosition,
           diceResult: finalValue,
-          correctAnswer: cappedCorrect,
-          options: finalOptions.sort((a, b) => a - b),
+          correctAnswer,
+          options: options.sort((a, b) => a - b),
         };
 
         set({
@@ -221,8 +212,9 @@ export const useGameStore = create<GameState>((set, get) => ({
       player.correctAnswers++;
       player.diceRolls++;
 
-      // Move player
-      const newPosition = currentQuestion.correctAnswer;
+      // Move player — if answer exceeds board, they still reach the finish
+      const rawPosition = currentQuestion.correctAnswer;
+      const newPosition = Math.min(rawPosition, BOARD_SIZE);
       player.position = newPosition;
       player.score += POINTS_CORRECT_ANSWER;
 
@@ -230,7 +222,18 @@ export const useGameStore = create<GameState>((set, get) => ({
       const square = board.find((s) => s.number === newPosition);
       let reward: GameState['lastReward'] = null;
 
-      if (square) {
+      // If player reached or passed the finish line
+      if (rawPosition >= BOARD_SIZE) {
+        const finishOrder =
+          players.filter((p) => p.hasFinished).length + 1;
+        player.hasFinished = true;
+        player.finishOrder = finishOrder;
+        reward = {
+          type: 'finish',
+          points: 0,
+          message: `¡${player.name} LLEGÓ A LA META! 🎉🏁`,
+        };
+      } else if (square) {
         if (square.type === 'REWARD_X5') {
           player.score += POINTS_REWARD_X5;
           reward = {
@@ -286,7 +289,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         currentQuestion: null,
         lastReward: reward,
         isMoving: true,
-        showConfetti: square?.type === 'FINISH' || false,
+        showConfetti: rawPosition >= BOARD_SIZE || square?.type === 'FINISH' || false,
       });
 
       // After moving animation, transition
@@ -300,7 +303,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         }
       }, 800);
     } else {
-      // Wrong answer - encouragement, no penalty
+      // Wrong answer - encouragement, no penalty, but count the error
       const encourageMsg = getRandomMessage(ENCOURAGEMENT_MESSAGES);
       get().addMessage(encourageMsg, 'error');
 
@@ -308,9 +311,13 @@ export const useGameStore = create<GameState>((set, get) => ({
         speakText('¡CASI! INTENTA OTRA VEZ');
       }
 
+      // Save the updated player (with incremented totalAttempts) back to state
+      const updatedPlayers = [...players];
+      updatedPlayers[currentPlayerIndex] = player;
+
       // Keep the question, let them try again
-      // Just add a visual shake via the component
       set({
+        players: updatedPlayers,
         phase: 'WAITING_ANSWER',
         currentQuestion: { ...currentQuestion }, // trigger re-render
       });

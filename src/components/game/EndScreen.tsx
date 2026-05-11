@@ -81,6 +81,10 @@ export function EndScreen() {
                   <span className="end-stat-val">{player.correctAnswers}</span>
                 </div>
                 <div className="end-stat-row">
+                  <span>✗ ERRORES:</span>
+                  <span className="end-stat-val">{player.totalAttempts - player.correctAnswers}</span>
+                </div>
+                <div className="end-stat-row">
                   <span>📊 PRECISIÓN:</span>
                   <span className="end-stat-val">
                     {player.totalAttempts > 0

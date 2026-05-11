@@ -124,12 +124,30 @@ export const generateMathOptions = (
 
   const range = difficulty === 'easy' ? 3 : difficulty === 'medium' ? 2 : 1;
 
-  while (options.size < 4) {
+  // Generate wrong options that are different from the correct answer and from each other
+  let attempts = 0;
+  while (options.size < 4 && attempts < 100) {
+    attempts++;
+    // Generate wrong answers around the correct answer
     const offset = Math.floor(Math.random() * (range * 2 + 1)) - range;
-    const wrong = position + offset;
-    if (wrong !== correctAnswer && wrong >= 0 && wrong <= BOARD_SIZE + 6) {
+    const wrong = correctAnswer + offset;
+    if (wrong !== correctAnswer && wrong > 0) {
       options.add(wrong);
     }
+  }
+
+  // Fallback: if we still don't have 4 distinct options, add manually
+  let fallback = 1;
+  while (options.size < 4) {
+    const candidate = correctAnswer + fallback;
+    if (!options.has(candidate) && candidate > 0) {
+      options.add(candidate);
+    }
+    const candidate2 = correctAnswer - fallback;
+    if (options.size < 4 && !options.has(candidate2) && candidate2 > 0 && candidate2 !== correctAnswer) {
+      options.add(candidate2);
+    }
+    fallback++;
   }
 
   // Shuffle options

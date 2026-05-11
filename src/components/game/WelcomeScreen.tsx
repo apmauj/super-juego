@@ -65,9 +65,10 @@ export function WelcomeScreen() {
         {/* Title */}
         <div className="welcome-title-section">
           <h1 className="welcome-title">
-            <span className="title-word" style={{ animationDelay: '0s' }}>¡SÚPER</span>
-            <span className="title-word" style={{ animationDelay: '0.2s' }}>HÉROES</span>
-            <span className="title-word" style={{ animationDelay: '0.4s' }}>MATEMÁTICOS!</span>
+            <span className="title-word" style={{ animationDelay: '0s' }}>¡SUPERHEROÍNAS</span>
+            <span className="title-word" style={{ animationDelay: '0.2s' }}>Y</span>
+            <span className="title-word" style={{ animationDelay: '0.3s' }}>SUPERHÉROES</span>
+            <span className="title-word" style={{ animationDelay: '0.5s' }}>MATEMÁTICOS!</span>
           </h1>
           <p className="welcome-subtitle">¡AVANZA POR EL TABLERO RESOLVIENDO SUMAS!</p>
         </div>

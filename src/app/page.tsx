@@ -46,7 +46,7 @@ export default function Home() {
       <div className="game-layout">
         {/* Header */}
         <header className="game-header">
-          <h1 className="game-header-title">¡SÚPER HÉROES MATEMÁTICOS!</h1>
+          <h1 className="game-header-title">¡SUPERHEROÍNAS Y SUPERHÉROES MATEMÁTICOS!</h1>
           <div className="game-header-controls">
             <button
               className="game-header-btn"
