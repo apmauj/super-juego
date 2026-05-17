@@ -43,6 +43,7 @@ export interface BoardSquare {
   number: number;
   type: SquareType;
   bonusItem?: CollectibleItem;
+  isPenalty?: boolean;
 }
 
 export interface Player {
@@ -55,6 +56,9 @@ export interface Player {
   correctAnswers: number;
   totalAttempts: number;
   diceRolls: number;
+  penaltyLands: number;
+  penaltyCorrect: number;
+  penaltyAttempts: number;
   hasFinished: boolean;
   finishOrder: number;
 }
@@ -64,6 +68,7 @@ export interface MathQuestion {
   diceResult: number;
   correctAnswer: number;
   options: number[];
+  operation: 'add' | 'sub';
 }
 
 export interface GameMessage {

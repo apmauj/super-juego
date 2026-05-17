@@ -7,6 +7,7 @@ import {
   getSquareTypeColor,
   getSquareTypeEmoji,
   getSquareTypeLabel,
+  PENALTY_EMOJI,
   SQUARES_PER_ROW,
   TOTAL_ROWS,
   BOARD_SIZE,
@@ -71,11 +72,12 @@ export function GameBoard() {
                 const isFinish = square.type === 'FINISH';
                 const isSpecial = square.type !== 'NORMAL';
                 const isStart = square.number === 1;
+                const isPenalty = Boolean(square.isPenalty);
 
                 return (
                   <div
                     key={square.number}
-                    className={`board-square-10 ${isFinish ? 'finish-square' : ''} ${isSpecial ? 'special-square' : ''} ${isStart ? 'start-square' : ''}`}
+                    className={`board-square-10 ${isFinish ? 'finish-square' : ''} ${isSpecial ? 'special-square' : ''} ${isStart ? 'start-square' : ''} ${isPenalty ? 'penalty-square' : ''}`}
                     style={{
                       backgroundColor: getSquareTypeColor(square.type),
                     }}
@@ -86,6 +88,10 @@ export function GameBoard() {
                     {/* Square type indicator */}
                     {getSquareTypeEmoji(square.type) && (
                       <span className="sq10-emoji">{getSquareTypeEmoji(square.type)}</span>
+                    )}
+
+                    {isPenalty && (
+                      <span className="sq10-penalty-emoji">{PENALTY_EMOJI}</span>
                     )}
 
                     {getSquareTypeLabel(square.type) && (

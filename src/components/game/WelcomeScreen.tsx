@@ -29,7 +29,17 @@ const STAR_POSITIONS = [
 ];
 
 export function WelcomeScreen() {
-  const { playerCount, setPlayerCount, setPhase, soundEnabled, toggleSound, speechEnabled, toggleSpeech } = useGameStore();
+  const {
+    playerCount,
+    setPlayerCount,
+    setPhase,
+    soundEnabled,
+    toggleSound,
+    speechEnabled,
+    toggleSpeech,
+    subtractionEnabled,
+    setSubtractionEnabled,
+  } = useGameStore();
   const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
@@ -127,6 +137,17 @@ export function WelcomeScreen() {
           <span className="play-button-text">¡JUGAR!</span>
           <span className="play-button-emoji">🚀</span>
         </button>
+
+        <div className="welcome-mode-toggle">
+          <label className="mode-checkbox">
+            <input
+              type="checkbox"
+              checked={subtractionEnabled}
+              onChange={(e) => setSubtractionEnabled(e.target.checked)}
+            />
+            <span className="mode-text">¡JUGAR CON RESTAS! 😱</span>
+          </label>
+        </div>
 
         {/* Settings */}
         <div className="welcome-settings">

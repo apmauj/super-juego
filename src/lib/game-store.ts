@@ -38,6 +38,10 @@ interface GameState {
   // Board
   board: BoardSquare[];
 
+  // Modes
+  subtractionEnabled: boolean;
+  pendingPenalty: { position: number } | null;
+
   // Dice
   diceValue: number | null;
   isDiceRolling: boolean;
@@ -67,6 +71,7 @@ interface GameState {
   // Actions
   setPlayerCount: (count: number) => void;
   setPhase: (phase: GamePhase) => void;
+  setSubtractionEnabled: (enabled: boolean) => void;
   addPlayer: (name: string, heroId: HeroId) => void;
   removeLastPlayer: () => void;
   startGame: () => void;
@@ -87,6 +92,8 @@ const initialState = {
   players: [],
   currentPlayerIndex: 0,
   board: [],
+  subtractionEnabled: false,
+  pendingPenalty: null,
   diceValue: null,
   isDiceRolling: false,
   currentQuestion: null,
@@ -109,6 +116,10 @@ export const useGameStore = create<GameState>((set, get) => ({
     set((state) => ({ phase, previousPhase: state.phase }));
   },
 
+  setSubtractionEnabled: (enabled: boolean) => {
+    set({ subtractionEnabled: enabled });
+  },
+
   addPlayer: (name: string, heroId: HeroId) => {
     const { players } = get();
     const hero = getHeroById(heroId);
@@ -122,6 +133,9 @@ export const useGameStore = create<GameState>((set, get) => ({
       correctAnswers: 0,
       totalAttempts: 0,
       diceRolls: 0,
+      penaltyLands: 0,
+      penaltyCorrect: 0,
+      penaltyAttempts: 0,
       hasFinished: false,
       finishOrder: 0,
     };
@@ -134,7 +148,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   startGame: () => {
-    const board = generateBoard();
+    const { subtractionEnabled } = get();
+    const board = generateBoard({ includePenalty: subtractionEnabled });
     set({
       phase: 'ROLLING_DICE',
       previousPhase: 'CHARACTER_SELECT',
@@ -144,6 +159,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       currentQuestion: null,
       messages: [],
       lastReward: null,
+      pendingPenalty: null,
       showConfetti: false,
     });
   },
@@ -170,13 +186,14 @@ export const useGameStore = create<GameState>((set, get) => ({
         const currentPosition = player.position;
 
         const correctAnswer = currentPosition + finalValue;
-        const options = generateMathOptions(currentPosition, finalValue);
+        const options = generateMathOptions(currentPosition, finalValue, 'easy', 'add');
 
         const question: MathQuestion = {
           position: currentPosition,
           diceResult: finalValue,
           correctAnswer,
           options: options.sort((a, b) => a - b),
+          operation: 'add',
         };
 
         set({
@@ -205,12 +222,80 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     const player = { ...players[currentPlayerIndex] };
     const isCorrect = answer === currentQuestion.correctAnswer;
+    const isPenaltyQuestion = currentQuestion.operation === 'sub';
 
     player.totalAttempts++;
+    if (isPenaltyQuestion) {
+      player.penaltyAttempts++;
+    }
 
     if (isCorrect) {
       player.correctAnswers++;
       player.diceRolls++;
+
+      if (isPenaltyQuestion) {
+        player.penaltyCorrect++;
+        const newPosition = Math.max(currentQuestion.correctAnswer, 1);
+        player.position = newPosition;
+        player.score += POINTS_CORRECT_ANSWER;
+
+        const square = board.find((s) => s.number === newPosition);
+        let reward: GameState['lastReward'] = null;
+        if (square) {
+          if (square.type === 'REWARD_X5') {
+            player.score += POINTS_REWARD_X5;
+            reward = {
+              type: 'x5',
+              points: POINTS_REWARD_X5,
+              message: `¡CASILLA MÚLTIPLO DE 5! +${POINTS_REWARD_X5} PUNTOS ⭐`,
+            };
+          } else if (square.type === 'REWARD_X10') {
+            player.score += POINTS_REWARD_X10;
+            reward = {
+              type: 'x10',
+              points: POINTS_REWARD_X10,
+              message: `¡CASILLA MÚLTIPLO DE 10! +${POINTS_REWARD_X10} PUNTOS 🏆`,
+            };
+          } else if (square.type === 'BONUS' && square.bonusItem) {
+            player.inventory.push({ ...square.bonusItem });
+            player.score += square.bonusItem.points;
+            reward = {
+              type: 'bonus',
+              points: square.bonusItem.points,
+              item: square.bonusItem,
+              message: `¡OBJETO ESPECIAL! ${square.bonusItem.emoji} ${square.bonusItem.name} +${square.bonusItem.points} PUNTOS`,
+            };
+          }
+        }
+
+        const successMsg = getRandomMessage(SUCCESS_MESSAGES);
+        get().addMessage(successMsg, 'success');
+        if (speechEnabled) {
+          speakText(successMsg);
+        }
+
+        const updatedPlayers = [...players];
+        updatedPlayers[currentPlayerIndex] = player;
+
+        set({
+          players: updatedPlayers,
+          phase: reward ? 'REWARD' : 'MOVING',
+          currentQuestion: null,
+          lastReward: reward,
+          pendingPenalty: null,
+          isMoving: true,
+          showConfetti: false,
+        });
+
+        setTimeout(() => {
+          if (reward) {
+            set({ isMoving: false });
+          } else {
+            get().nextTurn();
+          }
+        }, 700);
+        return;
+      }
 
       // Move player — if answer exceeds board, they still reach the finish
       const rawPosition = currentQuestion.correctAnswer;
@@ -220,6 +305,10 @@ export const useGameStore = create<GameState>((set, get) => ({
 
       // Check for rewards based on the new square
       const square = board.find((s) => s.number === newPosition);
+      const landedPenalty = Boolean(square?.isPenalty) && get().subtractionEnabled;
+      if (landedPenalty) {
+        player.penaltyLands++;
+      }
       let reward: GameState['lastReward'] = null;
 
       // If player reached or passed the finish line
@@ -288,6 +377,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         phase: reward ? 'REWARD' : allFinished ? 'FINISHED' : 'MOVING',
         currentQuestion: null,
         lastReward: reward,
+        pendingPenalty: landedPenalty ? { position: newPosition } : null,
         isMoving: true,
         showConfetti: rawPosition >= BOARD_SIZE || square?.type === 'FINISH' || false,
       });
@@ -297,7 +387,36 @@ export const useGameStore = create<GameState>((set, get) => ({
         if (allFinished) {
           set({ phase: 'FINISHED', showConfetti: true, isMoving: false });
         } else if (!reward) {
-          get().nextTurn();
+          const pending = get().pendingPenalty;
+          if (pending) {
+            const penaltyValue = Math.floor(Math.random() * 6) + 1;
+            const correctAnswer = Math.max(pending.position - penaltyValue, 1);
+            const options = generateMathOptions(pending.position, penaltyValue, 'easy', 'sub');
+            const question: MathQuestion = {
+              position: pending.position,
+              diceResult: penaltyValue,
+              correctAnswer,
+              options: options.sort((a, b) => a - b),
+              operation: 'sub',
+            };
+            set({
+              phase: 'WAITING_ANSWER',
+              currentQuestion: question,
+              pendingPenalty: null,
+              isMoving: false,
+            });
+
+            const playerName = get().players[get().currentPlayerIndex]?.name || '';
+            get().addMessage(
+              `¡MALA SUERTE! 😱 ${playerName}, ¿CUÁNTO ES ${pending.position} - ${penaltyValue}?`,
+              'info'
+            );
+            if (speechEnabled) {
+              speakText(`${playerName}, MALA SUERTE. ¿CUÁNTO ES ${pending.position} MENOS ${penaltyValue}?`);
+            }
+          } else {
+            get().nextTurn();
+          }
         } else {
           set({ isMoving: false });
         }
@@ -347,6 +466,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       diceValue: null,
       currentQuestion: null,
       lastReward: null,
+      pendingPenalty: null,
       isMoving: false,
     });
 
@@ -361,9 +481,37 @@ export const useGameStore = create<GameState>((set, get) => ({
   dismissReward: () => {
     const { players } = get();
     const allFinished = players.every((p) => p.hasFinished);
+    const pending = get().pendingPenalty;
 
     if (allFinished) {
       set({ phase: 'FINISHED', showConfetti: true, lastReward: null });
+    } else if (pending) {
+      const penaltyValue = Math.floor(Math.random() * 6) + 1;
+      const correctAnswer = Math.max(pending.position - penaltyValue, 1);
+      const options = generateMathOptions(pending.position, penaltyValue, 'easy', 'sub');
+      const question: MathQuestion = {
+        position: pending.position,
+        diceResult: penaltyValue,
+        correctAnswer,
+        options: options.sort((a, b) => a - b),
+        operation: 'sub',
+      };
+
+      set({
+        lastReward: null,
+        phase: 'WAITING_ANSWER',
+        currentQuestion: question,
+        pendingPenalty: null,
+      });
+
+      const playerName = players[get().currentPlayerIndex]?.name || '';
+      get().addMessage(
+        `¡MALA SUERTE! 😱 ${playerName}, ¿CUÁNTO ES ${pending.position} - ${penaltyValue}?`,
+        'info'
+      );
+      if (get().speechEnabled) {
+        speakText(`${playerName}, MALA SUERTE. ¿CUÁNTO ES ${pending.position} MENOS ${penaltyValue}?`);
+      }
     } else {
       set({ lastReward: null });
       get().nextTurn();
@@ -379,7 +527,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   resetGame: () => {
-    set({ ...initialState });
+    const { subtractionEnabled } = get();
+    set({ ...initialState, subtractionEnabled });
   },
 
   addMessage: (text: string, type: GameMessage['type']) => {

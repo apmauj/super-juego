@@ -95,12 +95,15 @@ export const COLLECTIBLE_ITEMS: CollectibleItem[] = [
 export const BOARD_SIZE = 100;
 export const SQUARES_PER_ROW = 10;
 export const TOTAL_ROWS = 10;
+export const PENALTY_EMOJI = '😱';
 
-export const generateBoard = (): BoardSquare[] => {
+export const generateBoard = (options?: { includePenalty?: boolean }): BoardSquare[] => {
   const board: BoardSquare[] = [];
+  const includePenalty = options?.includePenalty ?? false;
 
   // Generate random bonus positions for each decade (1-10, 11-20, ..., 91-100)
   const bonusPositions = new Set<number>();
+  const penaltyPositions = new Set<number>();
   for (let decade = 0; decade < 10; decade++) {
     const start = decade * 10 + 1;
     const end = Math.min(decade * 10 + 10, BOARD_SIZE - 1);
@@ -113,6 +116,25 @@ export const generateBoard = (): BoardSquare[] => {
     if (candidates.length > 0) {
       const randomIndex = Math.floor(Math.random() * candidates.length);
       bonusPositions.add(candidates[randomIndex]);
+    }
+
+    if (includePenalty) {
+      let penaltyCandidates: number[] = [];
+      if (decade === 0) {
+        const penaltyStart = 7;
+        const penaltyEnd = Math.min(10, end);
+        for (let i = penaltyStart; i <= penaltyEnd; i++) {
+          if (i !== BOARD_SIZE) penaltyCandidates.push(i);
+        }
+      } else {
+        for (let i = start; i <= end; i++) {
+          if (i !== 1 && i !== BOARD_SIZE) penaltyCandidates.push(i);
+        }
+      }
+      if (penaltyCandidates.length > 0) {
+        const penaltyIndex = Math.floor(Math.random() * penaltyCandidates.length);
+        penaltyPositions.add(penaltyCandidates[penaltyIndex]);
+      }
     }
   }
 
@@ -129,7 +151,7 @@ export const generateBoard = (): BoardSquare[] => {
       type = 'BONUS';
     }
 
-    const square: BoardSquare = { number: i, type };
+    const square: BoardSquare = { number: i, type, isPenalty: penaltyPositions.has(i) };
 
     if (type === 'BONUS') {
       const randomItem = COLLECTIBLE_ITEMS[Math.floor(Math.random() * COLLECTIBLE_ITEMS.length)];
@@ -152,9 +174,12 @@ export const POINTS_RARE_ITEM = 300;
 export const generateMathOptions = (
   position: number,
   diceResult: number,
-  difficulty: 'easy' | 'medium' | 'hard' = 'easy'
+  difficulty: 'easy' | 'medium' | 'hard' = 'easy',
+  operation: 'add' | 'sub' = 'add'
 ): number[] => {
-  const correctAnswer = position + diceResult;
+  const correctAnswer = operation === 'add'
+    ? position + diceResult
+    : Math.max(position - diceResult, 1);
   const options = new Set<number>();
   options.add(correctAnswer);
 

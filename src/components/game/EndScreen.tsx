@@ -97,6 +97,31 @@ export function EndScreen() {
                   <span>🎲 TIRADAS:</span>
                   <span className="end-stat-val">{player.diceRolls}</span>
                 </div>
+                {(player.penaltyLands > 0 || player.penaltyAttempts > 0) && (
+                  <>
+                    <div className="end-stat-row">
+                      <span>😱 MALAS SUERTES:</span>
+                      <span className="end-stat-val">{player.penaltyLands}</span>
+                    </div>
+                    <div className="end-stat-row">
+                      <span>✓ RESTAS:</span>
+                      <span className="end-stat-val">{player.penaltyCorrect}</span>
+                    </div>
+                    <div className="end-stat-row">
+                      <span>✗ RESTAS:</span>
+                      <span className="end-stat-val">{player.penaltyAttempts - player.penaltyCorrect}</span>
+                    </div>
+                    <div className="end-stat-row">
+                      <span>📉 PREC. RESTA:</span>
+                      <span className="end-stat-val">
+                        {player.penaltyAttempts > 0
+                          ? Math.round((player.penaltyCorrect / player.penaltyAttempts) * 100)
+                          : 0}
+                        %
+                      </span>
+                    </div>
+                  </>
+                )}
                 {player.inventory.length > 0 && (
                   <div className="end-stat-row">
                     <span>🎒 OBJETOS:</span>
