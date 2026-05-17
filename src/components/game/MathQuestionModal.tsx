@@ -20,8 +20,7 @@ export function MathQuestionModal() {
 
   const currentPlayer = players[currentPlayerIndex];
   const isPenalty = currentQuestion?.operation === 'sub';
-
-  if (!currentQuestion || phase !== 'WAITING_ANSWER') return null;
+  const isVisible = Boolean(currentQuestion && phase === 'WAITING_ANSWER');
 
   const handleAnswer = (answer: number) => {
     if (answer === currentQuestion.correctAnswer) {
@@ -33,17 +32,21 @@ export function MathQuestionModal() {
   };
 
   // Use question identity as key to reset state when question changes
-  const questionKey = `${currentQuestion.position}-${currentQuestion.diceResult}-${currentQuestion.correctAnswer}-${currentQuestion.operation}`;
+  const questionKey = currentQuestion
+    ? `${currentQuestion.position}-${currentQuestion.diceResult}-${currentQuestion.correctAnswer}-${currentQuestion.operation}`
+    : 'no-question';
 
   useEffect(() => {
-    if (!isPenalty) {
+    if (!isVisible || !isPenalty) {
       setIsRolling(false);
       return;
     }
     setIsRolling(true);
     const timer = setTimeout(() => setIsRolling(false), 700);
     return () => clearTimeout(timer);
-  }, [questionKey, isPenalty]);
+  }, [questionKey, isPenalty, isVisible]);
+
+  if (!isVisible || !currentQuestion) return null;
 
   return (
     <div className="math-modal-overlay" key={questionKey}>

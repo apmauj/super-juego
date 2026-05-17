@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import ShareQRCode from "../components/ShareQRCode";
+import ShareQRCode from "@/components/ShareQRCode";
 
 export const metadata: Metadata = {
   title: "¡Súper Matemáticos! - Juego Educativo",
