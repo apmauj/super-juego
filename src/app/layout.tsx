@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ShareQRCode from "../components/ShareQRCode";
 
 export const metadata: Metadata = {
   title: "¡Súper Hérootes Matemáticos! - Juego Educativo",
@@ -31,6 +32,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         {children}
+        <ShareQRCode />
       </body>
     </html>
   );

@@ -1,29 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 30 30" style="enable-background:new 0 0 30 30;" xml:space="preserve">
-<defs>
-  <style type="text/css">
-    .st194{fill:#2D2D2D;stroke:#FFFFFF;stroke-width:0.6317;stroke-miterlimit:10;}
-    .st23{fill:#FFFFFF;}
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Mega Bot">
+  <defs>
+    <style>
+      .bg { fill: #E8F4FD; }
+      .body { fill: #4A90D9; stroke: #2E6EB5; stroke-width: 6; }
+      .eye { fill: #FFFFFF; }
+      .pupil { fill: #2E6EB5; }
+      .mouth { fill: #2E6EB5; }
+      .antenna { fill: #2E6EB5; }
+    </style>
+  </defs>
+  <!-- background rounded -->
+  <rect x="6" y="6" width="188" height="188" rx="28" class="bg" />
 
-    .z-breathe {
-      animation: breathe 2.5s ease-in-out infinite;
-    }
+  <!-- head/body -->
+  <rect x="34" y="48" width="132" height="104" rx="18" class="body" />
 
-    @keyframes breathe {
-      0%, 100% { opacity: 0.7; }
-      50% { opacity: 1; }
-    }
-  </style>
-</defs>
+  <!-- eyes -->
+  <rect x="64" y="82" width="28" height="22" rx="6" class="eye" />
+  <circle cx="78" cy="93" r="6" class="pupil" />
 
-<g>
-  <path class="st194" d="M24.51,28.51H5.49c-2.21,0-4-1.79-4-4V5.49c0-2.21,1.79-4,4-4h19.03c2.21,0,4,1.79,4,4v19.03
-    C28.51,26.72,26.72,28.51,24.51,28.51z"/>
-  <g class="z-breathe">
-    <path class="st23" d="M15.47,7.1l-1.3,1.85c-0.2,0.29-0.54,0.47-0.9,0.47h-7.1V7.09C6.16,7.1,15.47,7.1,15.47,7.1z"/>
-    <polygon class="st23" points="24.3,7.1 13.14,22.91 5.7,22.91 16.86,7.1"/>
-    <path class="st23" d="M14.53,22.91l1.31-1.86c0.2-0.29,0.54-0.47,0.9-0.47h7.09v2.33H14.53z"/>
-  </g>
-</g>
+  <rect x="108" y="82" width="28" height="22" rx="6" class="eye" />
+  <circle cx="122" cy="93" r="6" class="pupil" />
+
+  <!-- mouth -->
+  <rect x="78" y="114" width="44" height="12" rx="6" class="mouth" />
+
+  <!-- antenna -->
+  <rect x="96" y="28" width="8" height="28" rx="4" class="antenna" />
+  <circle cx="100" cy="22" r="8" class="antenna" />
+
+  <!-- small decorations -->
+  <circle cx="54" cy="126" r="6" fill="#fff" opacity="0.15" />
+  <circle cx="146" cy="126" r="6" fill="#fff" opacity="0.15" />
 </svg>
