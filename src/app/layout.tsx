@@ -3,7 +3,7 @@ import "./globals.css";
 import ShareQRCode from "../components/ShareQRCode";
 
 export const metadata: Metadata = {
-  title: "¡Súper Hérootes Matemáticos! - Juego Educativo",
+  title: "¡Súper Matemáticos! - Juego Educativo",
   description: "Juego de mesa digital educativo de superhéroes para practicar suma, conteo y reconocimiento numérico. Para niños de 4 a 8 años.",
   keywords: ["juego educativo", "superhéroes", "matemáticas", "niños", "suma", "tablero"],
 };
