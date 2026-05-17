@@ -752,8 +752,10 @@
   border-radius: 16px;
   border: 4px solid #FFB74D;
   padding: 0.5rem;
-  max-width: 700px;
+  width: min(100%, 92vmin);
+  max-width: min(100%, 92vmin);
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .board-start-label,
@@ -918,10 +920,6 @@
 
 /* On larger screens, make squares bigger with max */
 @media (min-width: 768px) {
-  .game-board-frame {
-    max-width: none;
-  }
-  
   .board-row-indicator {
     width: 44px;
     font-size: 0.65rem;
