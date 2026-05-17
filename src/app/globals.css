@@ -815,8 +815,8 @@
   right: 20px;
   width: 56px;
   height: 56px;
-  background: var(--accent, #FF6B35);
-  color: white;
+  background: #FF6B35;
+  color: #FFFFFF;
   border: none;
   border-radius: 50%;
   display: flex;
@@ -857,7 +857,7 @@
 .qr-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #666; }
 .qr-caption { font-size: 0.9rem; color: var(--muted-foreground, #666); margin: 0; }
 .qr-actions { display: flex; gap: 0.5rem; align-items: center; justify-content: center; margin-top: 0.25rem; }
-.qr-link { color: var(--accent, #FF6B35); font-weight: 700; text-decoration: none; }
+.qr-link { color: #0B1F3B; font-weight: 700; text-decoration: none; }
 .qr-link:hover { text-decoration: underline; }
 .qr-close { background: none; border: 2px solid var(--border, #ddd); padding: 0.45rem 0.75rem; border-radius: 10px; cursor: pointer; font-weight: 700; }
 
