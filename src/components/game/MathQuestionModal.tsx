@@ -23,12 +23,9 @@ export function MathQuestionModal() {
   const isVisible = Boolean(currentQuestion && phase === 'WAITING_ANSWER');
 
   const handleAnswer = (answer: number) => {
-    if (answer === currentQuestion.correctAnswer) {
-      setWrongAnswer(null);
-      submitAnswer(answer);
-    } else {
-      setWrongAnswer(answer);
-    }
+    const isCorrect = answer === currentQuestion.correctAnswer;
+    setWrongAnswer(isCorrect ? null : answer);
+    submitAnswer(answer);
   };
 
   // Use question identity as key to reset state when question changes
@@ -45,6 +42,10 @@ export function MathQuestionModal() {
     const timer = setTimeout(() => setIsRolling(false), 700);
     return () => clearTimeout(timer);
   }, [questionKey, isPenalty, isVisible]);
+
+  useEffect(() => {
+    setWrongAnswer(null);
+  }, [questionKey]);
 
   if (!isVisible || !currentQuestion) return null;
 

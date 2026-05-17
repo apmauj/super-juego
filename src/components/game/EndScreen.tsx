@@ -85,10 +85,10 @@ export function EndScreen() {
                   <span className="end-stat-val">{player.totalAttempts - player.correctAnswers}</span>
                 </div>
                 <div className="end-stat-row">
-                  <span>📊 PRECISIÓN:</span>
+                  <span>📊 PREC. SUMA:</span>
                   <span className="end-stat-val">
-                    {player.totalAttempts > 0
-                      ? Math.round((player.correctAnswers / player.totalAttempts) * 100)
+                    {player.sumAttempts > 0
+                      ? Math.round((player.sumCorrect / player.sumAttempts) * 100)
                       : 0}
                     %
                   </span>

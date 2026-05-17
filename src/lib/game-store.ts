@@ -133,6 +133,8 @@ export const useGameStore = create<GameState>((set, get) => ({
       correctAnswers: 0,
       totalAttempts: 0,
       diceRolls: 0,
+      sumCorrect: 0,
+      sumAttempts: 0,
       penaltyLands: 0,
       penaltyCorrect: 0,
       penaltyAttempts: 0,
@@ -227,6 +229,8 @@ export const useGameStore = create<GameState>((set, get) => ({
     player.totalAttempts++;
     if (isPenaltyQuestion) {
       player.penaltyAttempts++;
+    } else {
+      player.sumAttempts++;
     }
 
     if (isCorrect) {
@@ -296,6 +300,8 @@ export const useGameStore = create<GameState>((set, get) => ({
         }, 700);
         return;
       }
+
+      player.sumCorrect++;
 
       // Move player — if answer exceeds board, they still reach the finish
       const rawPosition = currentQuestion.correctAnswer;

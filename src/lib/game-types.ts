@@ -56,6 +56,8 @@ export interface Player {
   correctAnswers: number;
   totalAttempts: number;
   diceRolls: number;
+  sumCorrect: number;
+  sumAttempts: number;
   penaltyLands: number;
   penaltyCorrect: number;
   penaltyAttempts: number;
